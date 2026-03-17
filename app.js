@@ -4,6 +4,9 @@ const API_SCHEDULE_DATA = (seasonYear) =>
 const API_STANDINGS_CDN = "https://cdn.nba.com/static/json/liveData/current/standings_all.json";
 
 const LOTTERY_COMBOS = [140, 140, 140, 125, 105, 90, 75, 60, 45, 30, 20, 15, 10, 5];
+// Require at least ~40% of the season's games (500 of 1,230 total)
+// to be completed before trusting the CDN schedule; otherwise fall back to the legacy API.
+const MIN_COMPLETED_GAMES = 500;
 
 const TEAM_DATA = {
   ATL: { name: "Atlanta Hawks", conf: "East" },
@@ -133,10 +136,16 @@ async function fetchSchedule() {
     const cdnSeason = String(cdnData.leagueSchedule.seasonYear ?? "");
     const expectedSeason = String(getSeasonYear());
     if (cdnSeason === expectedSeason) {
-      ui.meta.textContent = `Source: nba.com scheduleLeagueV2_10.json`;
-      return parseScheduleLeague(cdnData);
+      const parsed = parseScheduleLeague(cdnData);
+      const completedCount = parsed.filter((g) => isFinalGame(g)).length;
+      if (completedCount >= MIN_COMPLETED_GAMES) {
+        ui.meta.textContent = `Source: nba.com scheduleLeagueV2_10.json`;
+        return parsed;
+      }
+      console.warn(`CDN schedule has only ${completedCount} completed games (need ${MIN_COMPLETED_GAMES}); falling back to legacy API.`);
+    } else {
+      console.warn(`CDN schedule season (${cdnSeason || "unknown"}) does not match expected season (${expectedSeason}); falling back to legacy API.`);
     }
-    console.warn(`CDN schedule season (${cdnSeason || "unknown"}) does not match expected season (${expectedSeason}); falling back to legacy API.`);
   }
 
   const seasonYear = getSeasonYear();
