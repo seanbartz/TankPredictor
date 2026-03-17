@@ -139,7 +139,7 @@ async function fetchSchedule() {
       const parsed = parseScheduleLeague(cdnData);
       const completedCount = parsed.filter((g) => isFinalGame(g)).length;
       if (completedCount >= MIN_COMPLETED_GAMES) {
-        ui.meta.textContent = `Source: nba.com scheduleLeagueV2_10.json`;
+        ui.meta.textContent = `Source: nba.com ${API_SCHEDULE_CDN.split("/").pop()}`;
         return parsed;
       }
       console.warn(`CDN schedule has only ${completedCount} completed games (need ${MIN_COMPLETED_GAMES}); falling back to legacy API.`);
