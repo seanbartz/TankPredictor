@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TankPredictor</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="bg"></div>
+    <div class="app">
+      <header class="hero">
+        <div>
+          <div class="kicker">NBA Draft + Playoff Odds Simulator</div>
+          <h1>TankPredictor</h1>
+          <p class="subtitle">
+            Simulate the rest of the season, estimate playoff seed odds, and translate
+            lottery odds into draft pick probabilities.
+          </p>
+          <div class="meta" id="dataMeta">Loading live data…</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Simulation Controls</div>
+          <label class="field">
+            <span>Simulations</span>
+            <input id="simCount" type="number" min="500" max="50000" step="500" value="5000" />
+          </label>
+          <label class="field">
+            <span>Recent Games Window</span>
+            <input id="recentWindow" type="number" min="3" max="30" step="1" value="10" />
+          </label>
+          <label class="field">
+            <span>Recent Weight</span>
+            <input id="recentWeight" type="range" min="0" max="100" step="5" value="60" />
+            <div class="range-value" id="recentWeightValue">60%</div>
+          </label>
+          <label class="field">
+            <span>Home Court Boost</span>
+            <input id="homeBoost" type="range" min="0" max="10" step="1" value="3" />
+            <div class="range-value" id="homeBoostValue">3%</div>
+          </label>
+          <button id="runBtn" class="primary">Run Simulation</button>
+          <div class="note" id="status">Waiting for data…</div>
+        </div>
+      </header>
+
+      <section class="grid">
+        <div class="panel">
+          <div class="panel-title">Current Standings (Calculated)</div>
+          <div class="table-wrap" id="standingsTable"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Playoff Seed Odds</div>
+          <div class="table-wrap" id="seedOddsTable"></div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-title">Draft Pick Odds (1–14)</div>
+        <div class="table-wrap" id="pickOddsTable"></div>
+      </section>
+
+      <footer class="footer">
+        <div>
+          Data sources are pulled live from NBA public JSON endpoints. Odds are simulated
+          and will vary on each run.
+        </div>
+        <div>
+          Built for GitHub Pages. No server required.
+        </div>
+      </footer>
+    </div>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
