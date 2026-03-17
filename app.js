@@ -1,4 +1,4 @@
-const API_SCHEDULE_CDN = "https://cdn.nba.com/static/json/staticData/scheduleLeagueV2_9.json";
+const API_SCHEDULE_CDN = "https://cdn.nba.com/static/json/staticData/scheduleLeagueV2_10.json";
 const API_SCHEDULE_DATA = (seasonYear) =>
   `https://data.nba.com/data/10s/v2015/json/mobile_teams/nba/${seasonYear}/league/00_full_schedule.json`;
 const API_STANDINGS_CDN = "https://cdn.nba.com/static/json/liveData/current/standings_all.json";
@@ -130,8 +130,13 @@ async function init() {
 async function fetchSchedule() {
   const cdnData = await fetchJson(API_SCHEDULE_CDN).catch(() => null);
   if (cdnData && cdnData.leagueSchedule?.gameDates?.length) {
-    ui.meta.textContent = `Source: nba.com scheduleLeagueV2_9.json`;
-    return parseScheduleLeague(cdnData);
+    const cdnSeason = String(cdnData.leagueSchedule.seasonYear ?? "");
+    const expectedSeason = String(getSeasonYear());
+    if (cdnSeason === expectedSeason) {
+      ui.meta.textContent = `Source: nba.com scheduleLeagueV2_10.json`;
+      return parseScheduleLeague(cdnData);
+    }
+    console.warn(`CDN schedule season (${cdnSeason || "unknown"}) does not match expected season (${expectedSeason}); falling back to legacy API.`);
   }
 
   const seasonYear = getSeasonYear();
