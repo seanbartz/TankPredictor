@@ -1,7 +1,6 @@
 const API_SCHEDULE_CDN = "https://cdn.nba.com/static/json/staticData/scheduleLeagueV2_10.json";
 const API_SCHEDULE_DATA = (seasonYear) =>
   `https://data.nba.com/data/10s/v2015/json/mobile_teams/nba/${seasonYear}/league/00_full_schedule.json`;
-const API_STANDINGS_CDN = "https://cdn.nba.com/static/json/liveData/current/standings_all.json";
 
 const LOTTERY_COMBOS = [140, 140, 140, 125, 105, 90, 75, 60, 45, 30, 20, 15, 10, 5];
 // Require at least ~40% of the season's games to be completed (1,230 total)
@@ -50,39 +49,6 @@ const TEAM_ALIASES = {
   SEA: "OKC",
 };
 
-const TEAM_ID_MAP = {
-  1610612737: "ATL",
-  1610612738: "BOS",
-  1610612751: "BKN",
-  1610612766: "CHA",
-  1610612741: "CHI",
-  1610612739: "CLE",
-  1610612765: "DET",
-  1610612754: "IND",
-  1610612748: "MIA",
-  1610612749: "MIL",
-  1610612752: "NYK",
-  1610612753: "ORL",
-  1610612755: "PHI",
-  1610612761: "TOR",
-  1610612764: "WAS",
-  1610612742: "DAL",
-  1610612743: "DEN",
-  1610612744: "GSW",
-  1610612745: "HOU",
-  1610612746: "LAC",
-  1610612747: "LAL",
-  1610612763: "MEM",
-  1610612750: "MIN",
-  1610612740: "NOP",
-  1610612760: "OKC",
-  1610612756: "PHX",
-  1610612757: "POR",
-  1610612758: "SAC",
-  1610612759: "SAS",
-  1610612762: "UTA",
-};
-
 const comboPool = buildComboPool(LOTTERY_COMBOS);
 
 const ui = {
@@ -120,8 +86,8 @@ init();
 async function init() {
   ui.status.textContent = "Fetching schedule data…";
   try {
-    const [schedule, standings] = await Promise.all([fetchSchedule(), fetchStandings()]);
-    cachedData = prepareData(schedule, standings);
+    const schedule = await fetchSchedule();
+    cachedData = prepareData(schedule);
     renderStandings(cachedData);
     ui.status.textContent = "Ready to simulate.";
   } catch (err) {
@@ -147,12 +113,6 @@ async function fetchSchedule() {
   return parseLegacySchedule(legacyData);
 }
 
-async function fetchStandings() {
-  const standingsData = await fetchJson(API_STANDINGS_CDN).catch(() => null);
-  if (!standingsData) return null;
-  return parseStandings(standingsData);
-}
-
 async function fetchJson(url) {
   const response = await fetch(url, { cache: "no-cache" });
   if (!response.ok) {
@@ -165,17 +125,19 @@ function parseScheduleLeague(data) {
   const games = [];
   for (const dateBlock of data.leagueSchedule.gameDates) {
     for (const game of dateBlock.games) {
+      if (!isRegularSeasonGameId(game.gameId)) continue;
       const home = normalizeTeam(game.homeTeam.teamTricode);
       const away = normalizeTeam(game.awayTeam.teamTricode);
       if (!home || !away) continue;
       games.push({
-        date: new Date(game.gameDate || dateBlock.gameDate),
+        date: new Date(game.gameDateEst || game.gameDate || dateBlock.gameDate),
+        gameId: game.gameId,
         home,
         away,
-        homeScore: Number(game.homeTeam.score ?? 0),
-        awayScore: Number(game.awayTeam.score ?? 0),
+        homeScore: parseInt(game.homeTeam.score ?? "0", 10),
+        awayScore: parseInt(game.awayTeam.score ?? "0", 10),
         status: game.gameStatus ?? game.gameStatusText,
-        statusText: game.gameStatusText,
+        statusText: String(game.gameStatusText ?? "").trim(),
       });
     }
   }
@@ -188,24 +150,26 @@ function parseLegacySchedule(data) {
   for (const month of months) {
     const gameBlocks = month?.mscd?.g ?? [];
     for (const game of gameBlocks) {
+      if (!isRegularSeasonGameId(game.gid)) continue;
       const home = normalizeTeam(game.h?.ta);
       const away = normalizeTeam(game.v?.ta);
       if (!home || !away) continue;
       games.push({
         date: new Date(game.gdte),
+        gameId: game.gid,
         home,
         away,
-        homeScore: Number(game.h?.s ?? 0),
-        awayScore: Number(game.v?.s ?? 0),
+        homeScore: parseInt(game.h?.s ?? "0", 10),
+        awayScore: parseInt(game.v?.s ?? "0", 10),
         status: game.st,
-        statusText: game.stt,
+        statusText: String(game.stt ?? "").trim(),
       });
     }
   }
   return games;
 }
 
-function prepareData(games, standingsOverride) {
+function prepareData(games) {
   const teams = Object.keys(TEAM_DATA);
   const records = new Map();
 
@@ -218,8 +182,12 @@ function prepareData(games, standingsOverride) {
 
   for (const game of games) {
     const isFinal = isFinalGame(game);
-    const hasScores = Number.isFinite(game.homeScore) && Number.isFinite(game.awayScore);
-    if (isFinal && hasScores) {
+    const hasDecidedScore =
+      Number.isFinite(game.homeScore) &&
+      Number.isFinite(game.awayScore) &&
+      game.homeScore !== game.awayScore;
+
+    if (isFinal && hasDecidedScore) {
       completedGames.push(game);
       const homeWin = game.homeScore > game.awayScore;
       updateRecord(records, game.home, homeWin, game.date);
@@ -231,14 +199,9 @@ function prepareData(games, standingsOverride) {
 
   const standings = teams.map((team) => {
     const rec = records.get(team);
-    const override = standingsOverride?.[team];
-    const wins = Number.isFinite(override?.wins) ? override.wins : rec.wins;
-    const losses = Number.isFinite(override?.losses) ? override.losses : rec.losses;
-    const winPct = Number.isFinite(override?.winPct)
-      ? override.winPct
-      : wins + losses
-        ? wins / (wins + losses)
-        : 0.5;
+    const wins = rec.wins;
+    const losses = rec.losses;
+    const winPct = wins + losses ? wins / (wins + losses) : 0.5;
     return {
       team,
       name: TEAM_DATA[team].name,
@@ -262,50 +225,6 @@ function prepareData(games, standingsOverride) {
   };
 }
 
-function parseStandings(data) {
-  const entries = [];
-  const league = data?.league ?? data?.leagueStandings ?? data?.standings;
-  const standard = league?.standard ?? league?.Standard ?? league?.leagueStandard;
-
-  if (standard?.conference?.east && standard?.conference?.west) {
-    entries.push(...standard.conference.east, ...standard.conference.west);
-  } else if (Array.isArray(standard)) {
-    entries.push(...standard);
-  } else if (standard?.teams && Array.isArray(standard.teams)) {
-    entries.push(...standard.teams);
-  } else if (Array.isArray(league)) {
-    entries.push(...league);
-  }
-
-  const results = {};
-  for (const entry of entries) {
-    const teamCode =
-      normalizeTeam(entry.teamTricode) ||
-      normalizeTeam(entry.teamAbbreviation) ||
-      normalizeTeam(entry.teamCode) ||
-      normalizeTeam(entry.abbreviation) ||
-      (entry.teamId && TEAM_ID_MAP[Number(entry.teamId)]);
-
-    if (!teamCode) continue;
-    const wins = Number(entry.wins ?? entry.win ?? entry.WINS ?? entry.W);
-    const losses = Number(entry.losses ?? entry.loss ?? entry.LOSSES ?? entry.L);
-    const winPctRaw = entry.winPct ?? entry.pct ?? entry.WinPCT ?? entry.winPercentage;
-    const winPct =
-      winPctRaw !== undefined && winPctRaw !== null
-        ? Number(winPctRaw)
-        : wins + losses
-          ? wins / (wins + losses)
-          : 0.5;
-
-    results[teamCode] = { wins, losses, winPct };
-  }
-
-  if (Object.keys(results).length) {
-    ui.meta.textContent = `${ui.meta.textContent} · Standings: nba.com standings_all.json`;
-  }
-  return results;
-}
-
 function updateRecord(records, team, win, date) {
   const rec = records.get(team);
   if (!rec) return;
@@ -319,6 +238,10 @@ function isFinalGame(game) {
   if (statusText.includes("final")) return true;
   const status = Number(game.status);
   return status === 3;
+}
+
+function isRegularSeasonGameId(gameId) {
+  return String(gameId ?? "").startsWith("002");
 }
 
 function normalizeTeam(code) {
