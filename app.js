@@ -1,3 +1,4 @@
+const LOCAL_SCHEDULE_PATH = "./data/scheduleLeagueV2_10.json";
 const API_SCHEDULE_CDN = "https://cdn.nba.com/static/json/staticData/scheduleLeagueV2_10.json";
 const API_SCHEDULE_DATA = (seasonYear) =>
   `https://data.nba.com/data/10s/v2015/json/mobile_teams/nba/${seasonYear}/league/00_full_schedule.json`;
@@ -6,6 +7,7 @@ const LOTTERY_COMBOS = [140, 140, 140, 125, 105, 90, 75, 60, 45, 30, 20, 15, 10,
 // Require at least ~40% of the season's games to be completed (1,230 total)
 // before trusting the CDN schedule; otherwise fall back to the legacy API.
 const MIN_COMPLETED_GAMES = 500;
+const MIN_REGULAR_SEASON_GAMES = 1000;
 
 const TEAM_DATA = {
   ATL: { name: "Atlanta Hawks", conf: "East" },
@@ -88,29 +90,47 @@ async function init() {
   try {
     const schedule = await fetchSchedule();
     cachedData = prepareData(schedule);
+    if (!cachedData.completedGames.length) {
+      throw new Error("No completed regular season games were parsed from the schedule feed.");
+    }
     renderStandings(cachedData);
     ui.status.textContent = "Ready to simulate.";
   } catch (err) {
     console.error(err);
-    ui.status.textContent = "Failed to load data. Try refreshing.";
+    ui.status.textContent = `Failed to load data: ${err.message}`;
   }
 }
 
 async function fetchSchedule() {
+  const localData = await fetchJson(LOCAL_SCHEDULE_PATH).catch(() => null);
+  if (localData && localData.leagueSchedule?.gameDates?.length) {
+    const parsedLocal = parseScheduleLeague(localData);
+    const localCompletedCount = parsedLocal.filter((g) => isFinalGame(g)).length;
+    if (parsedLocal.length >= MIN_REGULAR_SEASON_GAMES && localCompletedCount >= MIN_COMPLETED_GAMES) {
+      ui.meta.textContent = `Source: local data/scheduleLeagueV2_10.json · Parsed: ${parsedLocal.length} regular season games · Finals: ${localCompletedCount}`;
+      return parsedLocal;
+    }
+  }
+
   const cdnData = await fetchJson(API_SCHEDULE_CDN).catch(() => null);
   if (cdnData && cdnData.leagueSchedule?.gameDates?.length) {
     const parsed = parseScheduleLeague(cdnData);
     const completedCount = parsed.filter((g) => isFinalGame(g)).length;
-    if (completedCount >= MIN_COMPLETED_GAMES) {
-      ui.meta.textContent = `Source: nba.com scheduleLeagueV2_10.json`;
+    if (parsed.length >= MIN_REGULAR_SEASON_GAMES && completedCount >= MIN_COMPLETED_GAMES) {
+      ui.meta.textContent = `Source: nba.com scheduleLeagueV2_10.json · Parsed: ${parsed.length} regular season games · Finals: ${completedCount}`;
       return parsed;
     }
   }
 
   const seasonYear = getSeasonYear();
   const legacyData = await fetchJson(API_SCHEDULE_DATA(seasonYear));
-  ui.meta.textContent = `Source: data.nba.com ${seasonYear} full schedule`;
-  return parseLegacySchedule(legacyData);
+  const parsedLegacy = parseLegacySchedule(legacyData);
+  const legacyCompletedCount = parsedLegacy.filter((g) => isFinalGame(g)).length;
+  ui.meta.textContent = `Source: data.nba.com ${seasonYear} full schedule · Parsed: ${parsedLegacy.length} regular season games · Finals: ${legacyCompletedCount}`;
+  if (parsedLegacy.length < MIN_REGULAR_SEASON_GAMES || legacyCompletedCount < MIN_COMPLETED_GAMES) {
+    throw new Error("No browser-safe schedule source was available. Refresh the local snapshot with sanity_check_records.py.");
+  }
+  return parsedLegacy;
 }
 
 async function fetchJson(url) {

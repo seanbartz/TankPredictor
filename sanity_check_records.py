@@ -9,8 +9,10 @@ from urllib.request import Request, urlopen
 
 SCHEDULE_URL = "https://cdn.nba.com/static/json/staticData/scheduleLeagueV2_10.json"
 OUTPUT_DIR = Path("/Users/seanbartz/TankPredictor/debug")
+DATA_DIR = Path("/Users/seanbartz/TankPredictor/data")
 JSON_PATH = OUTPUT_DIR / "scheduleLeagueV2_10.json"
 CSV_PATH = OUTPUT_DIR / "records.csv"
+APP_JSON_PATH = DATA_DIR / "scheduleLeagueV2_10.json"
 
 TEAM_DATA = {
     "ATL": {"name": "Atlanta Hawks", "conf": "East"},
@@ -149,13 +151,16 @@ def write_csv(records):
 
 def main():
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
     payload = fetch_schedule()
     JSON_PATH.write_text(json.dumps(payload, indent=2))
+    APP_JSON_PATH.write_text(json.dumps(payload))
     games = list(parse_games(payload))
     records, completed, skipped = compute_records(games)
     write_csv(records)
 
     print(f"saved_json={JSON_PATH}")
+    print(f"saved_app_json={APP_JSON_PATH}")
     print(f"saved_csv={CSV_PATH}")
     print(f"games_total={len(games)}")
     print(f"games_completed={completed}")
