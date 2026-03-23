@@ -508,7 +508,7 @@ function renderSeedOdds(seedOdds) {
 function renderPickOdds(pickOdds) {
   const columns = Array.from({ length: 14 }, (_, i) => i + 1);
   const rows = Object.keys(pickOdds)
-    .sort((a, b) => TEAM_DATA[a].name.localeCompare(TEAM_DATA[b].name))
+    .sort((a, b) => (pickOdds[b][0] ?? 0) - (pickOdds[a][0] ?? 0))
     .map((team) => {
       const probs = pickOdds[team];
       const cells = columns
