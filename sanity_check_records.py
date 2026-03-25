@@ -11,8 +11,8 @@ SCHEDULE_URL = "https://cdn.nba.com/static/json/staticData/scheduleLeagueV2_10.j
 OUTPUT_DIR = Path("/Users/seanbartz/TankPredictor/debug")
 DATA_DIR = Path("/Users/seanbartz/TankPredictor/data")
 JSON_PATH = OUTPUT_DIR / "scheduleLeagueV2_10.json"
-CSV_PATH = OUTPUT_DIR / "records.csv"
 APP_JSON_PATH = DATA_DIR / "scheduleLeagueV2_10.json"
+CSV_PATH = DATA_DIR / "records.csv"
 
 TEAM_DATA = {
     "ATL": {"name": "Atlanta Hawks", "conf": "East"},

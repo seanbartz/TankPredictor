@@ -1,0 +1,31 @@
+team,name,conference,wins,losses,games_played
+OKC,Oklahoma City Thunder,West,57,15,72
+SAS,San Antonio Spurs,West,54,18,72
+DET,Detroit Pistons,East,52,19,71
+NYK,New York Knicks,East,48,25,73
+BOS,Boston Celtics,East,47,24,71
+LAL,Los Angeles Lakers,West,46,26,72
+CLE,Cleveland Cavaliers,East,44,27,71
+DEN,Denver Nuggets,West,44,28,72
+MIN,Minnesota Timberwolves,West,44,28,72
+HOU,Houston Rockets,West,43,28,71
+TOR,Toronto Raptors,East,40,31,71
+ATL,Atlanta Hawks,East,40,32,72
+PHX,Phoenix Suns,West,40,32,72
+PHI,Philadelphia 76ers,East,39,33,72
+ORL,Orlando Magic,East,38,33,71
+CHA,Charlotte Hornets,East,38,34,72
+MIA,Miami Heat,East,38,34,72
+LAC,LA Clippers,West,36,36,72
+POR,Portland Trail Blazers,West,36,37,73
+GSW,Golden State Warriors,West,34,38,72
+CHI,Chicago Bulls,East,29,42,71
+MIL,Milwaukee Bucks,East,29,42,71
+NOP,New Orleans Pelicans,West,25,48,73
+MEM,Memphis Grizzlies,West,24,47,71
+DAL,Dallas Mavericks,West,23,49,72
+UTA,Utah Jazz,West,21,51,72
+SAC,Sacramento Kings,West,19,54,73
+BKN,Brooklyn Nets,East,17,55,72
+WAS,Washington Wizards,East,16,55,71
+IND,Indiana Pacers,East,16,56,72

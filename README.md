@@ -24,10 +24,10 @@ Or use the helper script:
 
 This refreshes:
 - `data/scheduleLeagueV2_10.json` for the browser app
-- `debug/records.csv` for a quick standings sanity check
+- `data/records.csv` for a quick standings sanity check
 
 ## Automated refresh
-GitHub Actions refreshes `data/scheduleLeagueV2_10.json` once per day at `09:00 UTC`.
+GitHub Actions refreshes `data/scheduleLeagueV2_10.json` and `data/records.csv` once per day at `09:00 UTC`.
 You can also trigger the same workflow manually from the Actions tab.
 
 ## GitHub Pages
