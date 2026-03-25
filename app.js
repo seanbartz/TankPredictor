@@ -320,7 +320,7 @@ function runSimulation() {
     homeBoost,
   });
 
-  renderSeedOdds(simResult.seedOdds);
+  renderLotteryPositionOdds(simResult.lotteryPositionOdds);
   renderPickOdds(simResult.pickOdds);
 
   const t1 = performance.now();
@@ -334,7 +334,7 @@ function simulate({ standings, remainingGames, recentWindow, recentWeight, sims,
 
   const strengths = computeStrengths(standings, recentWindow, recentWeight);
 
-  const seedCounts = Object.fromEntries(teamList.map((t) => [t, Array(15).fill(0)]));
+  const lotteryPositionCounts = Object.fromEntries(teamList.map((t) => [t, Array(14).fill(0)]));
   const pickCounts = Object.fromEntries(teamList.map((t) => [t, Array(14).fill(0)]));
 
   for (let i = 0; i < sims; i++) {
@@ -355,9 +355,6 @@ function simulate({ standings, remainingGames, recentWindow, recentWeight, sims,
     const east = rankConference(teamList, wins, "East");
     const west = rankConference(teamList, wins, "West");
 
-    east.forEach((team, idx) => seedCounts[team][idx]++);
-    west.forEach((team, idx) => seedCounts[team][idx]++);
-
     const playoffTeams = new Set();
     east.slice(0, 6).forEach((team) => playoffTeams.add(team));
     west.slice(0, 6).forEach((team) => playoffTeams.add(team));
@@ -369,6 +366,11 @@ function simulate({ standings, remainingGames, recentWindow, recentWeight, sims,
 
     const lotteryTeams = teamList.filter((team) => !playoffTeams.has(team));
     const lotteryOrder = orderLotteryTeams(lotteryTeams, wins);
+    lotteryOrder.forEach((team, idx) => {
+      if (team && idx < 14) {
+        lotteryPositionCounts[team][idx] += 1;
+      }
+    });
 
     const picks = simulateLottery(lotteryOrder);
     picks.forEach((team, idx) => {
@@ -376,10 +378,10 @@ function simulate({ standings, remainingGames, recentWindow, recentWeight, sims,
     });
   }
 
-  const seedOdds = Object.fromEntries(
+  const lotteryPositionOdds = Object.fromEntries(
     teamList.map((team) => [
       team,
-      seedCounts[team].map((count) => count / sims),
+      lotteryPositionCounts[team].map((count) => count / sims),
     ])
   );
 
@@ -390,7 +392,7 @@ function simulate({ standings, remainingGames, recentWindow, recentWeight, sims,
     ])
   );
 
-  return { seedOdds, pickOdds };
+  return { lotteryPositionOdds, pickOdds };
 }
 
 function computeStrengths(standings, recentWindow, recentWeight) {
@@ -479,14 +481,21 @@ function buildComboPool(odds) {
   return pool;
 }
 
-function renderSeedOdds(seedOdds) {
-  const columns = Array.from({ length: 15 }, (_, i) => i + 1);
-  const rows = Object.keys(seedOdds)
-    .sort((a, b) => TEAM_DATA[a].name.localeCompare(TEAM_DATA[b].name))
+function renderLotteryPositionOdds(lotteryPositionOdds) {
+  const columns = Array.from({ length: 14 }, (_, i) => i + 1);
+  const visibleTeams = Object.keys(lotteryPositionOdds)
+    .filter((team) => lotteryPositionOdds[team].some((value) => value > 0));
+  const rows = visibleTeams
+    .sort((teamA, teamB) => compareProbabilityVectorsDescending(
+      lotteryPositionOdds[teamA],
+      lotteryPositionOdds[teamB],
+      teamA,
+      teamB
+    ))
     .map((team) => {
-      const probs = seedOdds[team];
+      const probs = lotteryPositionOdds[team];
       const cells = columns
-        .map((seedIdx) => `<td>${formatPct(probs[seedIdx - 1])}</td>`)
+        .map((positionIdx) => `<td>${formatPct(probs[positionIdx - 1])}</td>`)
         .join("");
       return `<tr><td>${TEAM_DATA[team].name}</td>${cells}</tr>`;
     })
@@ -533,6 +542,15 @@ function renderPickOdds(pickOdds) {
 
 function formatPct(value) {
   return `${(value * 100).toFixed(1)}%`;
+}
+
+function compareProbabilityVectorsDescending(probsA, probsB, teamA, teamB) {
+  const length = Math.max(probsA.length, probsB.length);
+  for (let i = 0; i < length; i++) {
+    const diff = (probsB[i] ?? 0) - (probsA[i] ?? 0);
+    if (Math.abs(diff) > 1e-12) return diff;
+  }
+  return TEAM_DATA[teamA].name.localeCompare(TEAM_DATA[teamB].name);
 }
 
 function clamp(val, min, max) {
