@@ -26,6 +26,10 @@ This refreshes:
 - `data/scheduleLeagueV2_10.json` for the browser app
 - `debug/records.csv` for a quick standings sanity check
 
+## Automated refresh
+GitHub Actions refreshes `data/scheduleLeagueV2_10.json` once per day at `09:00 UTC`.
+You can also trigger the same workflow manually from the Actions tab.
+
 ## GitHub Pages
 Push the repo to GitHub and enable Pages in Settings → Pages → Deploy from branch (root).
 
