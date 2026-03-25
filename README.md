@@ -9,8 +9,25 @@ Static NBA season simulator designed for GitHub Pages. It:
 ## Run locally
 Open `index.html` in a browser (or use any static server).
 
+## Refresh local data
+Update the schedule snapshot and verification CSV with:
+
+```bash
+python3 sanity_check_records.py
+```
+
+Or use the helper script:
+
+```bash
+./update_standings.sh
+```
+
+This refreshes:
+- `data/scheduleLeagueV2_10.json` for the browser app
+- `debug/records.csv` for a quick standings sanity check
+
 ## GitHub Pages
 Push the repo to GitHub and enable Pages in Settings → Pages → Deploy from branch (root).
 
 ## Data sources
-This app pulls schedule data from NBA public JSON endpoints at runtime. If one source is empty, it falls back to the other.
+The browser app reads from the local `data/scheduleLeagueV2_10.json` snapshot because the NBA schedule endpoints are not browser-safe for static hosting. The snapshot is produced by `sanity_check_records.py`, which fetches the official NBA CDN schedule server-side.
