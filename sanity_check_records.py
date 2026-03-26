@@ -8,8 +8,9 @@ from urllib.request import Request, urlopen
 
 
 SCHEDULE_URL = "https://cdn.nba.com/static/json/staticData/scheduleLeagueV2_10.json"
-OUTPUT_DIR = Path("/Users/seanbartz/TankPredictor/debug")
-DATA_DIR = Path("/Users/seanbartz/TankPredictor/data")
+ROOT_DIR = Path(__file__).resolve().parent
+OUTPUT_DIR = ROOT_DIR / "debug"
+DATA_DIR = ROOT_DIR / "data"
 JSON_PATH = OUTPUT_DIR / "scheduleLeagueV2_10.json"
 APP_JSON_PATH = DATA_DIR / "scheduleLeagueV2_10.json"
 CSV_PATH = DATA_DIR / "records.csv"
