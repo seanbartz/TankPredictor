@@ -1,31 +1,31 @@
 team,name,conference,wins,losses,games_played
 OKC,Oklahoma City Thunder,West,57,16,73
-SAS,San Antonio Spurs,West,54,18,72
+SAS,San Antonio Spurs,West,55,18,73
 DET,Detroit Pistons,East,52,20,72
 BOS,Boston Celtics,East,48,24,72
 NYK,New York Knicks,East,48,25,73
 LAL,Los Angeles Lakers,West,47,26,73
+DEN,Denver Nuggets,West,46,28,74
 CLE,Cleveland Cavaliers,East,45,28,73
-DEN,Denver Nuggets,West,45,28,73
-MIN,Minnesota Timberwolves,West,44,28,72
-HOU,Houston Rockets,West,43,28,71
+MIN,Minnesota Timberwolves,West,45,28,73
+HOU,Houston Rockets,West,43,29,72
 ATL,Atlanta Hawks,East,41,32,73
-TOR,Toronto Raptors,East,40,31,71
+TOR,Toronto Raptors,East,40,32,72
 PHI,Philadelphia 76ers,East,40,33,73
 PHX,Phoenix Suns,West,40,33,73
 MIA,Miami Heat,East,39,34,73
 CHA,Charlotte Hornets,East,38,34,72
 ORL,Orlando Magic,East,38,34,72
-LAC,LA Clippers,West,36,36,72
-POR,Portland Trail Blazers,West,36,37,73
-GSW,Golden State Warriors,West,34,38,72
-MIL,Milwaukee Bucks,East,29,42,71
+LAC,LA Clippers,West,37,36,73
+POR,Portland Trail Blazers,West,37,37,74
+GSW,Golden State Warriors,West,35,38,73
 CHI,Chicago Bulls,East,29,43,72
+MIL,Milwaukee Bucks,East,29,43,72
 NOP,New Orleans Pelicans,West,25,48,73
-MEM,Memphis Grizzlies,West,24,47,71
-DAL,Dallas Mavericks,West,23,49,72
-UTA,Utah Jazz,West,21,51,72
+MEM,Memphis Grizzlies,West,24,48,72
+DAL,Dallas Mavericks,West,23,50,73
+UTA,Utah Jazz,West,21,52,73
 SAC,Sacramento Kings,West,19,54,73
-BKN,Brooklyn Nets,East,17,55,72
-WAS,Washington Wizards,East,16,55,71
+WAS,Washington Wizards,East,17,55,72
+BKN,Brooklyn Nets,East,17,56,73
 IND,Indiana Pacers,East,16,57,73
