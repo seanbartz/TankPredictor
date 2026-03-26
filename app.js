@@ -107,7 +107,6 @@ async function fetchSchedule() {
     const parsedLocal = parseScheduleLeague(localData);
     const localCompletedCount = parsedLocal.filter((g) => isFinalGame(g)).length;
     if (parsedLocal.length >= MIN_REGULAR_SEASON_GAMES && localCompletedCount >= MIN_COMPLETED_GAMES) {
-      ui.meta.textContent = `Source: local data/scheduleLeagueV2_10.json · Parsed: ${parsedLocal.length} regular season games · Finals: ${localCompletedCount}`;
       return parsedLocal;
     }
   }
@@ -117,7 +116,6 @@ async function fetchSchedule() {
     const parsed = parseScheduleLeague(cdnData);
     const completedCount = parsed.filter((g) => isFinalGame(g)).length;
     if (parsed.length >= MIN_REGULAR_SEASON_GAMES && completedCount >= MIN_COMPLETED_GAMES) {
-      ui.meta.textContent = `Source: nba.com scheduleLeagueV2_10.json · Parsed: ${parsed.length} regular season games · Finals: ${completedCount}`;
       return parsed;
     }
   }
@@ -126,7 +124,6 @@ async function fetchSchedule() {
   const legacyData = await fetchJson(API_SCHEDULE_DATA(seasonYear));
   const parsedLegacy = parseLegacySchedule(legacyData);
   const legacyCompletedCount = parsedLegacy.filter((g) => isFinalGame(g)).length;
-  ui.meta.textContent = `Source: data.nba.com ${seasonYear} full schedule · Parsed: ${parsedLegacy.length} regular season games · Finals: ${legacyCompletedCount}`;
   if (parsedLegacy.length < MIN_REGULAR_SEASON_GAMES || legacyCompletedCount < MIN_COMPLETED_GAMES) {
     throw new Error("No browser-safe schedule source was available. Refresh the local snapshot with sanity_check_records.py.");
   }
@@ -272,7 +269,6 @@ function normalizeTeam(code) {
 }
 
 function renderStandings(data) {
-  ui.meta.textContent = `${ui.meta.textContent} · Games played: ${data.completedGames.length} · Remaining: ${data.remainingGames.length}`;
   const rows = data.standings
     .map(
       (team) => `
