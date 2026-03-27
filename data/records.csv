@@ -1,9 +1,9 @@
 team,name,conference,wins,losses,games_played
 OKC,Oklahoma City Thunder,West,57,16,73
 SAS,San Antonio Spurs,West,55,18,73
-DET,Detroit Pistons,East,52,20,72
+DET,Detroit Pistons,East,53,20,73
 BOS,Boston Celtics,East,48,24,72
-NYK,New York Knicks,East,48,25,73
+NYK,New York Knicks,East,48,26,74
 LAL,Los Angeles Lakers,West,47,26,73
 DEN,Denver Nuggets,West,46,28,74
 CLE,Cleveland Cavaliers,East,45,28,73
@@ -13,19 +13,19 @@ ATL,Atlanta Hawks,East,41,32,73
 TOR,Toronto Raptors,East,40,32,72
 PHI,Philadelphia 76ers,East,40,33,73
 PHX,Phoenix Suns,West,40,33,73
+CHA,Charlotte Hornets,East,39,34,73
 MIA,Miami Heat,East,39,34,73
-CHA,Charlotte Hornets,East,38,34,72
-ORL,Orlando Magic,East,38,34,72
+ORL,Orlando Magic,East,39,34,73
 LAC,LA Clippers,West,37,36,73
 POR,Portland Trail Blazers,West,37,37,74
 GSW,Golden State Warriors,West,35,38,73
 CHI,Chicago Bulls,East,29,43,72
 MIL,Milwaukee Bucks,East,29,43,72
-NOP,New Orleans Pelicans,West,25,48,73
+NOP,New Orleans Pelicans,West,25,49,74
 MEM,Memphis Grizzlies,West,24,48,72
 DAL,Dallas Mavericks,West,23,50,73
 UTA,Utah Jazz,West,21,52,73
-SAC,Sacramento Kings,West,19,54,73
+SAC,Sacramento Kings,West,19,55,74
 WAS,Washington Wizards,East,17,55,72
 BKN,Brooklyn Nets,East,17,56,73
 IND,Indiana Pacers,East,16,57,73
