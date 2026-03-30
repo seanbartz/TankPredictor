@@ -1,31 +1,31 @@
 team,name,conference,wins,losses,games_played
-OKC,Oklahoma City Thunder,West,58,16,74
+OKC,Oklahoma City Thunder,West,59,16,75
 SAS,San Antonio Spurs,West,56,18,74
 DET,Detroit Pistons,East,54,20,74
-BOS,Boston Celtics,East,49,24,73
+BOS,Boston Celtics,East,50,24,74
 LAL,Los Angeles Lakers,West,48,26,74
-NYK,New York Knicks,East,48,26,74
-DEN,Denver Nuggets,West,47,28,75
+NYK,New York Knicks,East,48,27,75
+DEN,Denver Nuggets,West,48,28,76
 CLE,Cleveland Cavaliers,East,46,28,74
+HOU,Houston Rockets,West,45,29,74
 MIN,Minnesota Timberwolves,West,45,29,74
-HOU,Houston Rockets,West,44,29,73
+TOR,Toronto Raptors,East,42,32,74
 ATL,Atlanta Hawks,East,42,33,75
-TOR,Toronto Raptors,East,41,32,73
 PHI,Philadelphia 76ers,East,41,33,74
 PHX,Phoenix Suns,West,41,33,74
-ORL,Orlando Magic,East,39,34,73
-CHA,Charlotte Hornets,East,39,35,74
-MIA,Miami Heat,East,39,35,74
-LAC,LA Clippers,West,38,36,74
-POR,Portland Trail Blazers,West,37,38,75
-GSW,Golden State Warriors,West,36,38,74
-MIL,Milwaukee Bucks,East,29,44,73
+ORL,Orlando Magic,East,39,35,74
+CHA,Charlotte Hornets,East,39,36,75
+LAC,LA Clippers,West,39,36,75
+MIA,Miami Heat,East,39,36,75
+POR,Portland Trail Blazers,West,38,38,76
+GSW,Golden State Warriors,West,36,39,75
 CHI,Chicago Bulls,East,29,45,74
+MIL,Milwaukee Bucks,East,29,45,74
 MEM,Memphis Grizzlies,West,25,49,74
-NOP,New Orleans Pelicans,West,25,50,75
+NOP,New Orleans Pelicans,West,25,51,76
 DAL,Dallas Mavericks,West,24,50,74
 UTA,Utah Jazz,West,21,54,75
-SAC,Sacramento Kings,West,19,56,75
-WAS,Washington Wizards,East,17,56,73
-BKN,Brooklyn Nets,East,17,57,74
-IND,Indiana Pacers,East,16,58,74
+SAC,Sacramento Kings,West,19,57,76
+BKN,Brooklyn Nets,East,18,57,75
+WAS,Washington Wizards,East,17,57,74
+IND,Indiana Pacers,East,17,58,75
