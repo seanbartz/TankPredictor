@@ -268,29 +268,38 @@ function normalizeTeam(code) {
   return TEAM_DATA[mapped] ? mapped : null;
 }
 
-function renderStandings(data) {
+function renderStandings(data, winPredictions) {
+  const hasPredictions = !!winPredictions;
   const rows = data.standings
-    .map(
-      (team) => `
+    .map((team) => {
+      const pred = hasPredictions ? winPredictions[team.team] : null;
+      const predCells = pred
+        ? `<td>${pred.mean}</td><td>${pred.min}</td><td>${pred.max}</td>`
+        : hasPredictions
+        ? `<td>—</td><td>—</td><td>—</td>`
+        : "";
+      return `
         <tr>
           <td>${team.name}</td>
-          <td>${team.conf}</td>
           <td>${team.wins}</td>
           <td>${team.losses}</td>
-          <td>${(team.winPct * 100).toFixed(1)}%</td>
-        </tr>`
-    )
+          ${predCells}
+        </tr>`;
+    })
     .join("");
+
+  const predHeaders = hasPredictions
+    ? `<th>Pred W</th><th>Min W</th><th>Max W</th>`
+    : "";
 
   ui.standingsTable.innerHTML = `
     <table class="table">
       <thead>
         <tr>
           <th>Team</th>
-          <th>Conf</th>
           <th>W</th>
           <th>L</th>
-          <th>Win%</th>
+          ${predHeaders}
         </tr>
       </thead>
       <tbody>${rows}</tbody>
@@ -316,6 +325,7 @@ function runSimulation() {
     homeBoost,
   });
 
+  renderStandings(cachedData, simResult.winPredictions);
   renderLotteryPositionOdds(simResult.lotteryPositionOdds);
   renderPickOdds(simResult.pickOdds);
 
@@ -332,6 +342,7 @@ function simulate({ standings, remainingGames, recentWindow, recentWeight, sims,
 
   const lotteryPositionCounts = Object.fromEntries(teamList.map((t) => [t, Array(14).fill(0)]));
   const pickCounts = Object.fromEntries(teamList.map((t) => [t, Array(14).fill(0)]));
+  const winsByTeam = Object.fromEntries(teamList.map((t) => [t, []]));
 
   for (let i = 0; i < sims; i++) {
     const wins = { ...baseWins };
@@ -346,6 +357,10 @@ function simulate({ standings, remainingGames, recentWindow, recentWeight, sims,
         wins[game.away] += 1;
         losses[game.home] += 1;
       }
+    }
+
+    for (const team of teamList) {
+      winsByTeam[team].push(wins[team]);
     }
 
     const east = rankConference(teamList, wins, "East");
@@ -388,7 +403,18 @@ function simulate({ standings, remainingGames, recentWindow, recentWeight, sims,
     ])
   );
 
-  return { lotteryPositionOdds, pickOdds };
+  const winPredictions = Object.fromEntries(
+    teamList.map((team) => {
+      const simWins = winsByTeam[team];
+      const sorted = [...simWins].sort((a, b) => a - b);
+      const mean = Math.round(simWins.reduce((a, b) => a + b, 0) / simWins.length);
+      const min = sorted[Math.floor(0.05 * (sorted.length - 1))];
+      const max = sorted[Math.floor(0.95 * (sorted.length - 1))];
+      return [team, { mean, min, max }];
+    })
+  );
+
+  return { lotteryPositionOdds, pickOdds, winPredictions };
 }
 
 function computeStrengths(standings, recentWindow, recentWeight) {
