@@ -63,6 +63,7 @@ const ui = {
   recentWeightValue: document.getElementById("recentWeightValue"),
   homeBoost: document.getElementById("homeBoost"),
   homeBoostValue: document.getElementById("homeBoostValue"),
+  standingsPanelTitle: document.getElementById("standingsPanelTitle"),
   standingsTable: document.getElementById("standingsTable"),
   seedOddsTable: document.getElementById("seedOddsTable"),
   pickOddsTable: document.getElementById("pickOddsTable"),
@@ -94,6 +95,7 @@ async function init() {
       throw new Error("No completed regular season games were parsed from the schedule feed.");
     }
     renderStandings(cachedData);
+    ui.meta.textContent = `Standings last updated ${formatUpdateTime(cachedData.updatedAt)} · ${cachedData.completedGames.length} games played`;
     ui.status.textContent = "Ready to simulate.";
   } catch (err) {
     console.error(err);
@@ -232,13 +234,18 @@ function prepareData(games) {
 
   standings.sort((a, b) => b.wins - a.wins || b.winPct - a.winPct || a.losses - b.losses);
 
+  const lastGameDate =
+    completedGames.length > 0
+      ? new Date(Math.max(...completedGames.map((g) => g.date.getTime())))
+      : new Date();
+
   return {
     standings,
     records,
     completedGames,
     remainingGames,
     teams,
-    updatedAt: new Date(),
+    updatedAt: lastGameDate,
   };
 }
 
@@ -268,8 +275,36 @@ function normalizeTeam(code) {
   return TEAM_DATA[mapped] ? mapped : null;
 }
 
+function formatUpdateTime(date) {
+  const MS_PER_DAY = 86400000;
+  const etOptions = { timeZone: "America/New_York" };
+  const isoFormatter = new Intl.DateTimeFormat("en-CA", {
+    ...etOptions,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+  const dateET = isoFormatter.format(date);
+  const nowET = isoFormatter.format(new Date());
+
+  const [dateY, dateM, dateD] = dateET.split("-").map(Number);
+  const [nowY, nowM, nowD] = nowET.split("-").map(Number);
+  const dateMs = Date.UTC(dateY, dateM - 1, dateD);
+  const nowMs = Date.UTC(nowY, nowM - 1, nowD);
+  const diffDays = Math.round((nowMs - dateMs) / MS_PER_DAY);
+
+  if (diffDays === 0) return "today";
+  if (diffDays === 1) return "yesterday";
+  return new Intl.DateTimeFormat("en-US", { ...etOptions, month: "short", day: "numeric" }).format(date);
+}
+
 function renderStandings(data, winPredictions) {
   const hasPredictions = !!winPredictions;
+
+  if (data.updatedAt) {
+    ui.standingsPanelTitle.textContent = `Current Standings (updated ${formatUpdateTime(data.updatedAt)})`;
+  }
+
   const rows = data.standings
     .map((team) => {
       const pred = hasPredictions ? winPredictions[team.team] : null;
