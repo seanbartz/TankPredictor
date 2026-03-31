@@ -3,6 +3,7 @@
 import csv
 import json
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 from urllib.request import Request, urlopen
 
@@ -14,6 +15,7 @@ DATA_DIR = ROOT_DIR / "data"
 JSON_PATH = OUTPUT_DIR / "scheduleLeagueV2_10.json"
 APP_JSON_PATH = DATA_DIR / "scheduleLeagueV2_10.json"
 CSV_PATH = DATA_DIR / "records.csv"
+LAST_UPDATED_PATH = DATA_DIR / "last_updated.txt"
 
 TEAM_DATA = {
     "ATL": {"name": "Atlanta Hawks", "conf": "East"},
@@ -159,6 +161,9 @@ def main():
     games = list(parse_games(payload))
     records, completed, skipped = compute_records(games)
     write_csv(records)
+
+    today = datetime.now(timezone.utc).date().isoformat()
+    LAST_UPDATED_PATH.write_text(today + "\n")
 
     print(f"saved_json={JSON_PATH}")
     print(f"saved_app_json={APP_JSON_PATH}")
