@@ -94,6 +94,10 @@ async function init() {
     if (!cachedData.completedGames.length) {
       throw new Error("No completed regular season games were parsed from the schedule feed.");
     }
+    const snapshotDate = await fetchLastUpdated().catch(() => null);
+    if (snapshotDate) {
+      cachedData.updatedAt = snapshotDate;
+    }
     renderStandings(cachedData);
     ui.meta.textContent = `Standings last updated ${formatUpdateTime(cachedData.updatedAt)} · ${cachedData.completedGames.length} games played`;
     ui.status.textContent = "Ready to simulate.";
@@ -101,6 +105,14 @@ async function init() {
     console.error(err);
     ui.status.textContent = `Failed to load data: ${err.message}`;
   }
+}
+
+async function fetchLastUpdated() {
+  const response = await fetch("./data/last_updated.txt", { cache: "no-cache" });
+  if (!response.ok) return null;
+  const text = (await response.text()).trim();
+  const d = new Date(text + "T12:00:00Z");
+  return isNaN(d.getTime()) ? null : d;
 }
 
 async function fetchSchedule() {
