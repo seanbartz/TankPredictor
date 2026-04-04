@@ -2,30 +2,30 @@ team,name,conference,wins,losses,games_played
 OKC,Oklahoma City Thunder,West,61,16,77
 SAS,San Antonio Spurs,West,59,18,77
 DET,Detroit Pistons,East,56,21,77
-BOS,Boston Celtics,East,51,25,76
+BOS,Boston Celtics,East,52,25,77
 LAL,Los Angeles Lakers,West,50,27,77
+NYK,New York Knicks,East,50,28,78
 DEN,Denver Nuggets,West,49,28,77
-NYK,New York Knicks,East,49,28,77
 CLE,Cleveland Cavaliers,East,48,29,77
-HOU,Houston Rockets,West,47,29,76
-MIN,Minnesota Timberwolves,West,46,30,76
-ATL,Atlanta Hawks,East,44,33,77
-PHI,Philadelphia 76ers,East,42,34,76
-TOR,Toronto Raptors,East,42,34,76
+HOU,Houston Rockets,West,48,29,77
+MIN,Minnesota Timberwolves,West,46,31,77
+ATL,Atlanta Hawks,East,45,33,78
+PHI,Philadelphia 76ers,East,43,34,77
+TOR,Toronto Raptors,East,43,34,77
 PHX,Phoenix Suns,West,42,35,77
-CHA,Charlotte Hornets,East,41,36,77
-ORL,Orlando Magic,East,40,36,76
+CHA,Charlotte Hornets,East,42,36,78
+ORL,Orlando Magic,East,41,36,77
 MIA,Miami Heat,East,40,37,77
 POR,Portland Trail Blazers,West,40,38,78
 LAC,LA Clippers,West,39,38,77
 GSW,Golden State Warriors,West,36,41,77
-MIL,Milwaukee Bucks,East,30,46,76
-CHI,Chicago Bulls,East,29,47,76
-MEM,Memphis Grizzlies,West,25,51,76
-NOP,New Orleans Pelicans,West,25,52,77
-DAL,Dallas Mavericks,West,24,52,76
-UTA,Utah Jazz,West,21,56,77
-SAC,Sacramento Kings,West,20,57,77
-BKN,Brooklyn Nets,East,18,58,76
-IND,Indiana Pacers,East,18,58,76
+MIL,Milwaukee Bucks,East,30,47,77
+CHI,Chicago Bulls,East,29,48,77
+MEM,Memphis Grizzlies,West,25,52,77
+NOP,New Orleans Pelicans,West,25,53,78
+DAL,Dallas Mavericks,West,24,53,77
+SAC,Sacramento Kings,West,21,57,78
+UTA,Utah Jazz,West,21,57,78
+BKN,Brooklyn Nets,East,18,59,77
+IND,Indiana Pacers,East,18,59,77
 WAS,Washington Wizards,East,17,59,76
