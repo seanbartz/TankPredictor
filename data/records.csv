@@ -1,29 +1,29 @@
 team,name,conference,wins,losses,games_played
-OKC,Oklahoma City Thunder,West,63,16,79
-SAS,San Antonio Spurs,West,60,19,79
-DET,Detroit Pistons,East,57,22,79
+OKC,Oklahoma City Thunder,West,64,16,80
+SAS,San Antonio Spurs,West,61,19,80
+DET,Detroit Pistons,East,58,22,80
 BOS,Boston Celtics,East,54,25,79
-DEN,Denver Nuggets,West,51,28,79
+DEN,Denver Nuggets,West,52,28,80
 NYK,New York Knicks,East,51,28,79
-CLE,Cleveland Cavaliers,East,50,29,79
+CLE,Cleveland Cavaliers,East,51,29,80
 HOU,Houston Rockets,West,50,29,79
 LAL,Los Angeles Lakers,West,50,29,79
-MIN,Minnesota Timberwolves,West,47,32,79
-ATL,Atlanta Hawks,East,45,34,79
+MIN,Minnesota Timberwolves,West,47,33,80
+ATL,Atlanta Hawks,East,45,35,80
 TOR,Toronto Raptors,East,44,35,79
-ORL,Orlando Magic,East,43,36,79
+ORL,Orlando Magic,East,44,36,80
+PHX,Phoenix Suns,West,44,36,80
 PHI,Philadelphia 76ers,East,43,36,79
-PHX,Phoenix Suns,West,43,36,79
 CHA,Charlotte Hornets,East,43,37,80
-LAC,LA Clippers,West,41,38,79
 MIA,Miami Heat,East,41,38,79
-POR,Portland Trail Blazers,West,40,39,79
+LAC,LA Clippers,West,41,39,80
+POR,Portland Trail Blazers,West,40,40,80
 GSW,Golden State Warriors,West,37,42,79
-MIL,Milwaukee Bucks,East,31,48,79
+MIL,Milwaukee Bucks,East,31,49,80
 CHI,Chicago Bulls,East,30,49,79
 NOP,New Orleans Pelicans,West,26,54,80
-DAL,Dallas Mavericks,West,25,54,79
-MEM,Memphis Grizzlies,West,25,54,79
+DAL,Dallas Mavericks,West,25,55,80
+MEM,Memphis Grizzlies,West,25,55,80
 SAC,Sacramento Kings,West,21,59,80
 UTA,Utah Jazz,West,21,59,80
 BKN,Brooklyn Nets,East,20,59,79
