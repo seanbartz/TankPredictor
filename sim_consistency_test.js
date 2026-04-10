@@ -9,10 +9,6 @@
 
 "use strict";
 
-// ── Shared constants (kept in sync with app.js) ──────────────────────────────
-
-const LOTTERY_COMBOS = [140, 140, 140, 125, 105, 90, 75, 60, 45, 30, 20, 15, 10, 5];
-
 // Pre-computed pick probability matrix (same as in app.js).
 const OFFICIAL_PICK_ODDS = [
   [0.14012, 0.13420, 0.12749, 0.11959, 0.47859, 0, 0, 0, 0, 0, 0, 0, 0, 0], // seed 1
