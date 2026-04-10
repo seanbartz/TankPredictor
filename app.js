@@ -4,6 +4,31 @@ const API_SCHEDULE_DATA = (seasonYear) =>
   `https://data.nba.com/data/10s/v2015/json/mobile_teams/nba/${seasonYear}/league/00_full_schedule.json`;
 
 const LOTTERY_COMBOS = [140, 140, 140, 125, 105, 90, 75, 60, 45, 30, 20, 15, 10, 5];
+
+// Pre-computed pick probability matrix derived from LOTTERY_COMBOS.
+// OFFICIAL_PICK_ODDS[seedIdx][pickIdx] = probability that the team at lottery
+// seed (seedIdx+1) receives draft pick (pickIdx+1).
+// seedIdx 0 = worst record (lottery seed 1), 13 = best record among lottery teams.
+// pickIdx 0 = pick 1, 13 = pick 14.
+// Computed via simulation of 10 million lottery draws; zero entries are exactly 0
+// (impossible outcomes) because a team can drop at most 4 spots from its seed.
+const OFFICIAL_PICK_ODDS = [
+  [0.14012, 0.13420, 0.12749, 0.11959, 0.47859, 0, 0, 0, 0, 0, 0, 0, 0, 0], // seed 1
+  [0.13997, 0.13413, 0.12733, 0.11978, 0.27852, 0.20027, 0, 0, 0, 0, 0, 0, 0, 0], // seed 2
+  [0.13990, 0.13407, 0.12757, 0.11971, 0.14832, 0.26018, 0.07024, 0, 0, 0, 0, 0, 0, 0], // seed 3
+  [0.12509, 0.12230, 0.11897, 0.11470, 0.07235, 0.25731, 0.16735, 0.02192, 0, 0, 0, 0, 0, 0], // seed 4
+  [0.10501, 0.10541, 0.10552, 0.10532, 0.02221, 0.19598, 0.26746, 0.08688, 0.00622, 0, 0, 0, 0, 0], // seed 5
+  [0.08997, 0.09194, 0.09419, 0.09628, 0, 0.08626, 0.29775, 0.20526, 0.03685, 0.00150, 0, 0, 0, 0], // seed 6
+  [0.07499, 0.07797, 0.08129, 0.08525, 0, 0, 0.19719, 0.34104, 0.12889, 0.01306, 0.00030, 0, 0, 0], // seed 7
+  [0.05991, 0.06347, 0.06749, 0.07219, 0, 0, 0, 0.34489, 0.32067, 0.06753, 0.00381, 0, 0, 0], // seed 8
+  [0.04494, 0.04844, 0.05220, 0.05704, 0, 0, 0, 0, 0.50737, 0.25893, 0.03016, 0.00092, 0, 0], // seed 9
+  [0.03003, 0.03273, 0.03599, 0.04011, 0, 0, 0, 0, 0, 0.65898, 0.18993, 0.01204, 0.00018, 0], // seed 10
+  [0.02009, 0.02203, 0.02456, 0.02755, 0, 0, 0, 0, 0, 0, 0.77580, 0.12593, 0.00402, 0], // seed 11
+  [0.01492, 0.01658, 0.01856, 0.02105, 0, 0, 0, 0, 0, 0, 0, 0.86106, 0.06705, 0.00077], // seed 12
+  [0.01000, 0.01115, 0.01254, 0.01424, 0, 0, 0, 0, 0, 0, 0, 0, 0.92874, 0.02334], // seed 13
+  [0.00506, 0.00558, 0.00629, 0.00720, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.97587], // seed 14
+];
+
 // Require at least ~40% of the season's games to be completed (1,230 total)
 // before trusting the CDN schedule; otherwise fall back to the legacy API.
 const MIN_COMPLETED_GAMES = 500;
@@ -50,8 +75,6 @@ const TEAM_ALIASES = {
   NOK: "NOP",
   SEA: "OKC",
 };
-
-const comboPool = buildComboPool(LOTTERY_COMBOS);
 
 const ui = {
   meta: document.getElementById("dataMeta"),
@@ -388,7 +411,6 @@ function simulate({ standings, remainingGames, recentWindow, recentWeight, sims,
   const strengths = computeStrengths(standings, recentWindow, recentWeight);
 
   const lotteryPositionCounts = Object.fromEntries(teamList.map((t) => [t, Array(14).fill(0)]));
-  const pickCounts = Object.fromEntries(teamList.map((t) => [t, Array(14).fill(0)]));
   const winsByTeam = Object.fromEntries(teamList.map((t) => [t, []]));
 
   for (let i = 0; i < sims; i++) {
@@ -429,11 +451,6 @@ function simulate({ standings, remainingGames, recentWindow, recentWeight, sims,
         lotteryPositionCounts[team][idx] += 1;
       }
     });
-
-    const picks = simulateLottery(lotteryOrder);
-    picks.forEach((team, idx) => {
-      if (team) pickCounts[team][idx]++;
-    });
   }
 
   const lotteryPositionOdds = Object.fromEntries(
@@ -443,11 +460,23 @@ function simulate({ standings, remainingGames, recentWindow, recentWeight, sims,
     ])
   );
 
+  // Derive pick odds directly from lottery position odds using the official pick
+  // probability matrix. This guarantees that the pick odds table is always
+  // mathematically consistent with the lottery position odds table: a team can
+  // only show non-zero probability for a pick that is reachable from the lottery
+  // positions it actually occupies in the simulations.
   const pickOdds = Object.fromEntries(
-    teamList.map((team) => [
-      team,
-      pickCounts[team].map((count) => count / sims),
-    ])
+    teamList.map((team) => {
+      const posOdds = lotteryPositionOdds[team];
+      const pickProbs = Array(14).fill(0);
+      for (let seedIdx = 0; seedIdx < 14; seedIdx++) {
+        if (posOdds[seedIdx] === 0) continue;
+        for (let pickIdx = 0; pickIdx < 14; pickIdx++) {
+          pickProbs[pickIdx] += posOdds[seedIdx] * OFFICIAL_PICK_ODDS[seedIdx][pickIdx];
+        }
+      }
+      return [team, pickProbs];
+    })
   );
 
   const winPredictions = Object.fromEntries(
@@ -524,32 +553,6 @@ function orderLotteryTeams(lotteryTeams, wins) {
   return grouped.flat();
 }
 
-function simulateLottery(lotteryOrder) {
-  const winners = [];
-  const selected = new Set();
-
-  while (winners.length < 4) {
-    const seedIdx = comboPool[Math.floor(Math.random() * comboPool.length)];
-    const team = lotteryOrder[seedIdx];
-    if (!team || selected.has(team)) continue;
-    winners.push(team);
-    selected.add(team);
-  }
-
-  const remaining = lotteryOrder.filter((team) => !selected.has(team));
-  return [...winners, ...remaining];
-}
-
-function buildComboPool(odds) {
-  const pool = [];
-  odds.forEach((count, idx) => {
-    for (let i = 0; i < count; i++) {
-      pool.push(idx);
-    }
-  });
-  return pool;
-}
-
 function renderLotteryPositionOdds(lotteryPositionOdds) {
   const columns = Array.from({ length: 14 }, (_, i) => i + 1);
   const visibleTeams = Object.keys(lotteryPositionOdds)
@@ -585,7 +588,9 @@ function renderLotteryPositionOdds(lotteryPositionOdds) {
 
 function renderPickOdds(pickOdds) {
   const columns = Array.from({ length: 14 }, (_, i) => i + 1);
-  const rows = Object.keys(pickOdds)
+  const visibleTeams = Object.keys(pickOdds)
+    .filter((team) => pickOdds[team].some((value) => value > 0));
+  const rows = visibleTeams
     .sort((a, b) => (pickOdds[b][0] ?? 0) - (pickOdds[a][0] ?? 0))
     .map((team) => {
       const probs = pickOdds[team];
