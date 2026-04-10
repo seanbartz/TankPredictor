@@ -3,9 +3,7 @@ const API_SCHEDULE_CDN = "https://cdn.nba.com/static/json/staticData/scheduleLea
 const API_SCHEDULE_DATA = (seasonYear) =>
   `https://data.nba.com/data/10s/v2015/json/mobile_teams/nba/${seasonYear}/league/00_full_schedule.json`;
 
-const LOTTERY_COMBOS = [140, 140, 140, 125, 105, 90, 75, 60, 45, 30, 20, 15, 10, 5];
-
-// Pre-computed pick probability matrix derived from LOTTERY_COMBOS.
+// Pre-computed pick probability matrix.
 // OFFICIAL_PICK_ODDS[seedIdx][pickIdx] = probability that the team at lottery
 // seed (seedIdx+1) receives draft pick (pickIdx+1).
 // seedIdx 0 = worst record (lottery seed 1), 13 = best record among lottery teams.
