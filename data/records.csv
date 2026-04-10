@@ -2,30 +2,30 @@ team,name,conference,wins,losses,games_played
 OKC,Oklahoma City Thunder,West,64,16,80
 SAS,San Antonio Spurs,West,61,19,80
 DET,Detroit Pistons,East,58,22,80
-BOS,Boston Celtics,East,54,25,79
+BOS,Boston Celtics,East,54,26,80
 DEN,Denver Nuggets,West,52,28,80
-NYK,New York Knicks,East,51,28,79
+NYK,New York Knicks,East,52,28,80
 CLE,Cleveland Cavaliers,East,51,29,80
-HOU,Houston Rockets,West,50,29,79
-LAL,Los Angeles Lakers,West,50,29,79
+HOU,Houston Rockets,West,51,29,80
+LAL,Los Angeles Lakers,West,51,29,80
 MIN,Minnesota Timberwolves,West,47,33,80
 ATL,Atlanta Hawks,East,45,35,80
-TOR,Toronto Raptors,East,44,35,79
+TOR,Toronto Raptors,East,45,35,80
 ORL,Orlando Magic,East,44,36,80
 PHX,Phoenix Suns,West,44,36,80
-PHI,Philadelphia 76ers,East,43,36,79
 CHA,Charlotte Hornets,East,43,37,80
-MIA,Miami Heat,East,41,38,79
+PHI,Philadelphia 76ers,East,43,37,80
 LAC,LA Clippers,West,41,39,80
+MIA,Miami Heat,East,41,39,80
 POR,Portland Trail Blazers,West,40,40,80
-GSW,Golden State Warriors,West,37,42,79
+GSW,Golden State Warriors,West,37,43,80
+CHI,Chicago Bulls,East,31,49,80
 MIL,Milwaukee Bucks,East,31,49,80
-CHI,Chicago Bulls,East,30,49,79
 NOP,New Orleans Pelicans,West,26,54,80
 DAL,Dallas Mavericks,West,25,55,80
 MEM,Memphis Grizzlies,West,25,55,80
 SAC,Sacramento Kings,West,21,59,80
 UTA,Utah Jazz,West,21,59,80
-BKN,Brooklyn Nets,East,20,59,79
-IND,Indiana Pacers,East,18,61,79
-WAS,Washington Wizards,East,17,62,79
+BKN,Brooklyn Nets,East,20,60,80
+IND,Indiana Pacers,East,19,61,80
+WAS,Washington Wizards,East,17,63,80
