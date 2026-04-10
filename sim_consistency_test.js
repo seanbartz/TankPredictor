@@ -206,13 +206,20 @@ const currentWins = {
 
 const { lotteryPositionOdds, pickOdds } = runSim(currentWins, [], 50000);
 
+function findLastMatchingIndex(arr, predicate) {
+  for (let i = arr.length - 1; i >= 0; i--) {
+    if (predicate(arr[i], i, arr)) return i;
+  }
+  return -1;
+}
+
 // For every team, the max reachable pick from their lottery positions must
 // be >= the max pick with non-zero probability.
 for (const team of Object.keys(TEAM_DATA)) {
-  const maxSeedIdx = lotteryPositionOdds[team].findLastIndex((v) => v > 0);
+  const maxSeedIdx = findLastMatchingIndex(lotteryPositionOdds[team], (v) => v > 0);
   if (maxSeedIdx === -1) continue; // playoff team - skip
   const maxAllowedPickIdx = Math.min(13, maxSeedIdx + 4);
-  const actualMaxPickIdx = pickOdds[team].findLastIndex((v) => v > 0.00001);
+  const actualMaxPickIdx = findLastMatchingIndex(pickOdds[team], (v) => v > 0.00001);
   assert(
     actualMaxPickIdx <= maxAllowedPickIdx,
     `${team}: max pick ${actualMaxPickIdx + 1} <= max allowed pick ${maxAllowedPickIdx + 1} (from seed ${maxSeedIdx + 1})`
