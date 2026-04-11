@@ -1,31 +1,31 @@
 team,name,conference,wins,losses,games_played
-OKC,Oklahoma City Thunder,West,64,16,80
-SAS,San Antonio Spurs,West,61,19,80
-DET,Detroit Pistons,East,58,22,80
-BOS,Boston Celtics,East,54,26,80
-DEN,Denver Nuggets,West,52,28,80
-NYK,New York Knicks,East,52,28,80
-CLE,Cleveland Cavaliers,East,51,29,80
-HOU,Houston Rockets,West,51,29,80
-LAL,Los Angeles Lakers,West,51,29,80
-MIN,Minnesota Timberwolves,West,47,33,80
-ATL,Atlanta Hawks,East,45,35,80
-TOR,Toronto Raptors,East,45,35,80
-ORL,Orlando Magic,East,44,36,80
-PHX,Phoenix Suns,West,44,36,80
-CHA,Charlotte Hornets,East,43,37,80
-PHI,Philadelphia 76ers,East,43,37,80
-LAC,LA Clippers,West,41,39,80
-MIA,Miami Heat,East,41,39,80
-POR,Portland Trail Blazers,West,40,40,80
-GSW,Golden State Warriors,West,37,43,80
-CHI,Chicago Bulls,East,31,49,80
-MIL,Milwaukee Bucks,East,31,49,80
-NOP,New Orleans Pelicans,West,26,54,80
-DAL,Dallas Mavericks,West,25,55,80
-MEM,Memphis Grizzlies,West,25,55,80
-SAC,Sacramento Kings,West,21,59,80
-UTA,Utah Jazz,West,21,59,80
-BKN,Brooklyn Nets,East,20,60,80
-IND,Indiana Pacers,East,19,61,80
-WAS,Washington Wizards,East,17,63,80
+OKC,Oklahoma City Thunder,West,64,17,81
+SAS,San Antonio Spurs,West,62,19,81
+DET,Detroit Pistons,East,59,22,81
+BOS,Boston Celtics,East,55,26,81
+DEN,Denver Nuggets,West,53,28,81
+NYK,New York Knicks,East,53,28,81
+LAL,Los Angeles Lakers,West,52,29,81
+CLE,Cleveland Cavaliers,East,51,30,81
+HOU,Houston Rockets,West,51,30,81
+MIN,Minnesota Timberwolves,West,48,33,81
+ATL,Atlanta Hawks,East,46,35,81
+ORL,Orlando Magic,East,45,36,81
+TOR,Toronto Raptors,East,45,36,81
+PHI,Philadelphia 76ers,East,44,37,81
+PHX,Phoenix Suns,West,44,37,81
+CHA,Charlotte Hornets,East,43,38,81
+MIA,Miami Heat,East,42,39,81
+LAC,LA Clippers,West,41,40,81
+POR,Portland Trail Blazers,West,41,40,81
+GSW,Golden State Warriors,West,37,44,81
+MIL,Milwaukee Bucks,East,32,49,81
+CHI,Chicago Bulls,East,31,50,81
+NOP,New Orleans Pelicans,West,26,55,81
+DAL,Dallas Mavericks,West,25,56,81
+MEM,Memphis Grizzlies,West,25,56,81
+SAC,Sacramento Kings,West,22,59,81
+UTA,Utah Jazz,West,22,59,81
+BKN,Brooklyn Nets,East,20,61,81
+IND,Indiana Pacers,East,19,62,81
+WAS,Washington Wizards,East,17,64,81
